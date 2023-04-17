@@ -45,6 +45,15 @@ export const Tasks = () => {
         setTasks(listFiltered)
     }
 
+    const completedTask = (id: string) => {
+        const listCopy = [...tasks]
+        const index = tasks.findIndex(task => task.id === id)
+        listCopy[index].isCompleted = !listCopy[index].isCompleted
+
+        setTasks(listCopy)
+        console.log(tasks)
+    }
+
     const currentTasksCompleted = () => {
         const amount = tasks.reduce((acc, task) => {
             if(task.isCompleted){
@@ -96,13 +105,12 @@ export const Tasks = () => {
                 <div className={styles.listTasks}>
                     {tasks.map((task) => (
                         <TaskItem 
-                            key={task.id}
-                            tasks={tasks} 
+                            key={task.id} 
+                            isCompleted={task.isCompleted}
                             taskId={task.id} 
                             title={task.title} 
-                            isCompleted={task.isCompleted}
                             onDeleteTask={deleteTask}
-                            onSetTasks={setTasks} 
+                            onCompletedTask={completedTask}
                         />
                     ))}
                 </div>

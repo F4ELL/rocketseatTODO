@@ -1,51 +1,44 @@
 import styles from './TaskItem.module.css'
+import * as Checkbox from '@radix-ui/react-checkbox';
 
-import { Trash } from 'phosphor-react'
+import { Check, Trash } from 'phosphor-react'
 import { TTasks } from './Tasks'
-import { useCallback } from 'react'
 
 interface TTaskItemProps {
-    tasks: TTasks[]
     taskId: string
     title: string
     isCompleted: boolean
     onDeleteTask: (id: string) => void
-    onSetTasks: (list: TTasks[]) => void
+    onCompletedTask: (id: string) => void
 }
 
-export const TaskItem = ({ tasks, taskId, title, isCompleted, onDeleteTask, onSetTasks }: TTaskItemProps) => {
+export const TaskItem = ({ taskId, title, isCompleted, onDeleteTask, onCompletedTask }: TTaskItemProps) => {
 
     const handleDeleteTask = () => {
         onDeleteTask(taskId)
     }
 
-    const completedTask = useCallback((id: string) => {
-        console.log(id)
-        console.log(tasks)
-        const checkIndex = tasks.findIndex(task => task.id === id)
-        console.log(checkIndex)
+    const HandleCompletedTask = () => {
+        onCompletedTask(taskId)
+    }
 
-        const newList = [...tasks]
-        if(newList[checkIndex].isCompleted === false){
-            newList[checkIndex].isCompleted = true
-        } else {
-            newList[checkIndex].isCompleted = false
-        }
-        console.log(newList)
-        onSetTasks(newList)
-    }, [isCompleted])
+    console.log(isCompleted)
 
     return (
         <div className={styles.taskItem}>
-            
-            <div className={styles.round} onClick={() => completedTask(taskId)}>
-                <input type="checkbox" checked={isCompleted}  id="checkbox" />
-                <label htmlFor="checkbox"></label>
-            </div>
+            <Checkbox.Root 
+                asChild 
+                onCheckedChange={HandleCompletedTask}
+            >
+                <div className={styles.check}>
+                    <Checkbox.Indicator asChild>
+                        <Check size={12} color='#FFF' />
+                    </Checkbox.Indicator>
+                </div>
+            </Checkbox.Root>
 
-
-            <p>{taskId}</p>
-            <button 
+            <p className={isCompleted ? styles.completedTitle : styles.titleTask}>{title}</p>
+            <button
                 onClick={handleDeleteTask}
                 title='Deletar Task'
             >
